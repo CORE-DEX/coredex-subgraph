@@ -1,0 +1,8 @@
+build/
+node_modules/
+src/types/
+
+.vscode/
+
+.DS_STORE
+yarn-error.log
