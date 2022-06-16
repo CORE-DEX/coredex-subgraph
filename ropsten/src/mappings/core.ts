@@ -214,10 +214,10 @@ export function handleSync(event: Sync): void {
   let pair = Pair.load(event.address.toHex())
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
-  let CoreDex = CoreDexFactory.load(FACTORY_ADDRESS)
+  let coredex = CoreDexFactory.load(FACTORY_ADDRESS)
 
   // reset factory liquidity by subtracting onluy tarcked liquidity
-  CoreDex.totalLiquidityETH = CoreDex.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal)
+  coredex.totalLiquidityETH = coredex.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal)
 
   // reset token total liquidity amounts
   token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0)
@@ -261,8 +261,8 @@ export function handleSync(event: Sync): void {
   pair.reserveUSD = pair.reserveETH.times(bundle.ethPrice)
 
   // use tracked amounts globally
-  CoreDex.totalLiquidityETH = CoreDex.totalLiquidityETH.plus(trackedLiquidityETH)
-  CoreDex.totalLiquidityUSD = CoreDex.totalLiquidityETH.times(bundle.ethPrice)
+  coredex.totalLiquidityETH = coredex.totalLiquidityETH.plus(trackedLiquidityETH)
+  coredex.totalLiquidityUSD = coredex.totalLiquidityETH.times(bundle.ethPrice)
 
   // now correctly set liquidity amounts for each token
   token0.totalLiquidity = token0.totalLiquidity.plus(pair.reserve0)
@@ -270,7 +270,7 @@ export function handleSync(event: Sync): void {
 
   // save entities
   pair.save()
-  CoreDex.save()
+  coredex.save()
   token0.save()
   token1.save()
 }
@@ -281,7 +281,7 @@ export function handleMint(event: Mint): void {
   let mint = MintEvent.load(mints[mints.length - 1])
 
   let pair = Pair.load(event.address.toHex())
-  let CoreDex = CoreDexFactory.load(FACTORY_ADDRESS)
+  let coredex = CoreDexFactory.load(FACTORY_ADDRESS)
 
   let token0 = Token.load(pair.token0)
   let token1 = Token.load(pair.token1)
@@ -303,13 +303,13 @@ export function handleMint(event: Mint): void {
 
   // update txn counts
   pair.txCount = pair.txCount.plus(ONE_BI)
-  CoreDex.txCount = CoreDex.txCount.plus(ONE_BI)
+  coredex.txCount = coredex.txCount.plus(ONE_BI)
 
   // save entities
   token0.save()
   token1.save()
   pair.save()
-  CoreDex.save()
+  coredex.save()
 
   mint.sender = event.params.sender
   mint.amount0 = token0Amount as BigDecimal
@@ -342,7 +342,7 @@ export function handleBurn(event: Burn): void {
   let burn = BurnEvent.load(burns[burns.length - 1])
 
   let pair = Pair.load(event.address.toHex())
-  let CoreDex = CoreDexFactory.load(FACTORY_ADDRESS)
+  let coredex = CoreDexFactory.load(FACTORY_ADDRESS)
 
   //update token info
   let token0 = Token.load(pair.token0)
@@ -362,14 +362,14 @@ export function handleBurn(event: Burn): void {
     .times(bundle.ethPrice)
 
   // update txn counts
-  CoreDex.txCount = CoreDex.txCount.plus(ONE_BI)
+  coredex.txCount = coredex.txCount.plus(ONE_BI)
   pair.txCount = pair.txCount.plus(ONE_BI)
 
   // update global counter and save
   token0.save()
   token1.save()
   pair.save()
-  CoreDex.save()
+  coredex.save()
 
   // update burn
   // burn.sender = event.params.sender
@@ -448,17 +448,17 @@ export function handleSwap(event: Swap): void {
   pair.save()
 
   // update global values, only used tracked amounts for volume
-  let CoreDex = CoreDexFactory.load(FACTORY_ADDRESS)
-  CoreDex.totalVolumeUSD = CoreDex.totalVolumeUSD.plus(trackedAmountUSD)
-  CoreDex.totalVolumeETH = CoreDex.totalVolumeETH.plus(trackedAmountETH)
-  CoreDex.untrackedVolumeUSD = CoreDex.untrackedVolumeUSD.plus(derivedAmountUSD)
-  CoreDex.txCount = CoreDex.txCount.plus(ONE_BI)
+  let coredex = CoreDexFactory.load(FACTORY_ADDRESS)
+  coredex.totalVolumeUSD = coredex.totalVolumeUSD.plus(trackedAmountUSD)
+  coredex.totalVolumeETH = coredex.totalVolumeETH.plus(trackedAmountETH)
+  coredex.untrackedVolumeUSD = coredex.untrackedVolumeUSD.plus(derivedAmountUSD)
+  coredex.txCount = coredex.txCount.plus(ONE_BI)
 
   // save entities
   pair.save()
   token0.save()
   token1.save()
-  CoreDex.save()
+  coredex.save()
 
   let transaction = Transaction.load(event.transaction.hash.toHexString())
   if (transaction === null) {
@@ -505,15 +505,15 @@ export function handleSwap(event: Swap): void {
   // update day entities
   let pairDayData = updatePairDayData(event)
   let pairHourData = updatePairHourData(event)
-  let CoreDexDayData = updateCoreDexDayData(event)
+  let coredexDayData = updateCoreDexDayData(event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
 
   // swap specific updating
-  CoreDexDayData.dailyVolumeUSD = CoreDexDayData.dailyVolumeUSD.plus(trackedAmountUSD)
-  CoreDexDayData.dailyVolumeETH = CoreDexDayData.dailyVolumeETH.plus(trackedAmountETH)
-  CoreDexDayData.dailyVolumeUntracked = CoreDexDayData.dailyVolumeUntracked.plus(derivedAmountUSD)
-  CoreDexDayData.save()
+  coredexDayData.dailyVolumeUSD = coredexDayData.dailyVolumeUSD.plus(trackedAmountUSD)
+  coredexDayData.dailyVolumeETH = coredexDayData.dailyVolumeETH.plus(trackedAmountETH)
+  coredexDayData.dailyVolumeUntracked = coredexDayData.dailyVolumeUntracked.plus(derivedAmountUSD)
+  coredexDayData.save()
 
   // swap specific updating for pair
   pairDayData.dailyVolumeToken0 = pairDayData.dailyVolumeToken0.plus(amount0Total)
