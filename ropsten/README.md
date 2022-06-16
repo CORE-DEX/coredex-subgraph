@@ -26,11 +26,11 @@ Make sure to update package.json settings to point to your own graph account.
 
 ## Queries
 
-Below are a few ways to show how to query the CORE DEX-subgraph for data. The queries show most of the information that is queryable, but there are many other filtering options that can be used, just check out the [querying api](https://thegraph.com/docs/graphql-api). These queries can be used locally or in The Graph Explorer playground.
+Below are a few ways to show how to query the coredex-subgraph for data. The queries show most of the information that is queryable, but there are many other filtering options that can be used, just check out the [querying api](https://thegraph.com/docs/graphql-api). These queries can be used locally or in The Graph Explorer playground.
 
 ## Key Entity Overviews
 
-#### CORE DEXFactory
+#### CoreDexFactory
 
 Contains data across all of CORE DEX. This entity tracks important things like total liquidity (in ETH and USD, see below), all time volume, transaction count, number of pairs and more.
 
@@ -58,7 +58,7 @@ This query fetches aggredated data from all CORE DEX pairs and tokens, to give a
 
 ```graphql
 {
-  CORE DEXFactories(first: 1) {
+  CoreDexFactories(first: 1) {
     pairCount
     totalVolumeUSD
     totalLiquidityUSD
