@@ -1,8 +1,17 @@
-build/
-node_modules/
-src/types/
+ropsten/build/
+ropsten/node_modules/
+ropsten/src/types/
 
-.vscode/
+ropsten/.vscode/
 
-.DS_STORE
-yarn-error.log
+ropsten/.DS_STORE
+ropsten/yarn-error.log
+
+mumbai/build/
+mumbai/node_modules/
+mumbai/src/types/
+
+mumbai/.vscode/
+
+mumbai/.DS_STORE
+mumbai/yarn-error.log

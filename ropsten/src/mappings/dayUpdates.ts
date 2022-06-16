@@ -1,31 +1,31 @@
 /* eslint-disable prefer-const */
 import { BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts'
-import { Bundle, Pair, PairDayData, Token, TokenDayData, CocoreswapDayData, CocoreswapFactory } from '../types/schema'
+import { Bundle, Pair, PairDayData, Token, TokenDayData, CoreDexDayData, CoreDexFactory } from '../types/schema'
 import { PairHourData } from './../types/schema'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from './helpers'
 
-export function updateCocoreswapDayData(event: ethereum.Event): CocoreswapDayData {
-  let cocoreswap = CocoreswapFactory.load(FACTORY_ADDRESS)
+export function updateCoreDexDayData(event: ethereum.Event): CoreDexDayData {
+  let CoreDex = CoreDexFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
-  let cocoreswapDayData = CocoreswapDayData.load(dayID.toString())
-  if (cocoreswapDayData === null) {
-    cocoreswapDayData = new CocoreswapDayData(dayID.toString())
-    cocoreswapDayData.date = dayStartTimestamp
-    cocoreswapDayData.dailyVolumeUSD = ZERO_BD
-    cocoreswapDayData.dailyVolumeETH = ZERO_BD
-    cocoreswapDayData.totalVolumeUSD = ZERO_BD
-    cocoreswapDayData.totalVolumeETH = ZERO_BD
-    cocoreswapDayData.dailyVolumeUntracked = ZERO_BD
+  let coredexDayData = CoreDexDayData.load(dayID.toString())
+  if (coredexDayData === null) {
+    coredexDayData = new CoreDexDayData(dayID.toString())
+    coredexDayData.date = dayStartTimestamp
+    coredexDayData.dailyVolumeUSD = ZERO_BD
+    coredexDayData.dailyVolumeETH = ZERO_BD
+    coredexDayData.totalVolumeUSD = ZERO_BD
+    coredexDayData.totalVolumeETH = ZERO_BD
+    coredexDayData.dailyVolumeUntracked = ZERO_BD
   }
 
-  cocoreswapDayData.totalLiquidityUSD = cocoreswap.totalLiquidityUSD
-  cocoreswapDayData.totalLiquidityETH = cocoreswap.totalLiquidityETH
-  cocoreswapDayData.txCount = cocoreswap.txCount
-  cocoreswapDayData.save()
+  coredexDayData.totalLiquidityUSD = CoreDex.totalLiquidityUSD
+  coredexDayData.totalLiquidityETH = CoreDex.totalLiquidityETH
+  coredexDayData.txCount = CoreDex.txCount
+  coredexDayData.save()
 
-  return cocoreswapDayData as CocoreswapDayData
+  return coredexDayData as CoreDexDayData
 }
 
 export function updatePairDayData(event: ethereum.Event): PairDayData {

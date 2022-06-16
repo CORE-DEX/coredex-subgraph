@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Cocoreswap is a decentralized protocol for automated token exchange on Ethereum.
-repository: https://github.com/CocoreProjects/cocoreswap-subgraph-ropsten
+description: CORE DEX is a decentralized protocol for automated token exchange on Ethereum.
+repository: https://github.com/CORE-DEX/coredex-subgraph/ropsten
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,7 +8,7 @@ dataSources:
     name: Factory
     network: ropsten
     source:
-      address: '0x5f040BffAC55cb29cbB98593dc684732Fe035557'
+      address: '0x193950159f7b3b23bBfe49ff90fD2B3b0aA1E72c'
       abi: Factory
       startBlock: 11975681
     mapping:

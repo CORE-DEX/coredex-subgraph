@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { log } from '@graphprotocol/graph-ts'
 import { PairCreated } from '../types/Factory/Factory'
-import { Bundle, Pair, Token, CocoreswapFactory } from '../types/schema'
+import { Bundle, Pair, Token, CoreDexFactory } from '../types/schema'
 import { Pair as PairTemplate } from '../types/templates'
 import {
   FACTORY_ADDRESS,
@@ -15,9 +15,9 @@ import {
 
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
-  let factory = CocoreswapFactory.load(FACTORY_ADDRESS)
+  let factory = CoreDexFactory.load(FACTORY_ADDRESS)
   if (factory === null) {
-    factory = new CocoreswapFactory(FACTORY_ADDRESS)
+    factory = new CoreDexFactory(FACTORY_ADDRESS)
     factory.pairCount = 0
     factory.totalVolumeETH = ZERO_BD
     factory.totalLiquidityETH = ZERO_BD
