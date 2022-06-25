@@ -1,11 +1,11 @@
-ropsten/build/
-ropsten/node_modules/
-ropsten/src/types/
+goerli/build/
+goerli/node_modules/
+goerli/src/types/
 
-ropsten/.vscode/
+goerli/.vscode/
 
-ropsten/.DS_STORE
-ropsten/yarn-error.log
+goerli/.DS_STORE
+goerli/yarn-error.log
 
 mumbai/build/
 mumbai/node_modules/

@@ -1,20 +1,21 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../types/schema'
-import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
+import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from './helpers'
 
-const WETH_ADDRESS = '0xc778417e063141139fce010982780140aa0cd5ab'
-const USDC_WETH_PAIR = '0x42382c0dfe9cb93b5128210d0d76e2dd4c51def4'
-const DAI_WETH_PAIR = '0x51b6582ada05235ae311ec9b2a71c4a084fb05c9'
-const USDT_WETH_PAIR = '0xb12439582de7562e7edeb847de6951c582895d35'
+const WETH_ADDRESS = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
+const USDC_WETH_PAIR = '0xc48133ee1acd520647f9f4f47de8eab69b0c5620'
+const DAI_WETH_PAIR = '0x02a21004903a4cf1613f509f4bc7b7fa28f3c12f'
+//const USDT_WETH_PAIR = ''
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
-  let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
-  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
-  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token0
+  let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token1
+  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token1
+//  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token0
 
   // all 3 have been created
+  /*
   if (daiPair !== null && usdcPair !== null && usdtPair !== null ) {
     let totalLiquidityETH = daiPair.reserve1.plus(usdcPair.reserve1).plus(usdtPair.reserve1)
     let daiWeight = daiPair.reserve1.div(totalLiquidityETH)
@@ -36,14 +37,25 @@ export function getEthPriceInUSD(): BigDecimal {
   } else {
     return ZERO_BD
   }
+  */
+  if (daiPair !== null && usdcPair !== null) {
+    let totalLiquidityETH = daiPair.reserve0.plus(usdcPair.reserve0)
+    let daiWeight = daiPair.reserve0.div(totalLiquidityETH)
+    let usdcWeight = usdcPair.reserve0.div(totalLiquidityETH)
+    return daiPair.token1Price.times(daiWeight).plus(usdcPair.token1Price.times(usdcWeight))
+    // USDC is the only pair so far
+  } else if (usdcPair !== null) {
+    return usdcPair.token1Price
+  } else {
+    return ZERO_BD
+  }
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-  '0xc778417e063141139fce010982780140aa0cd5ab', // WETH
-  '0xad6d458402f60fd3bd25163575031acdce07538d', // DAI
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f', // USDC
-  '0x110a13fc3efe6a245b50102d2d79b3e76125ae83', // USDT
+  '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', // WETH
+  '0xdc31ee1784292379fbb2964b3b9c4124d8f89c60', // DAI
+  '0xd87ba7a50b2e7e660f678a895e4b72e7cb4ccd9c', // USDC
 ]
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps

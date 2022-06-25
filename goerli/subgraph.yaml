@@ -1,16 +1,16 @@
 specVersion: 0.0.2
 description: CORE DEX is a decentralized protocol for automated token exchange on Ethereum.
-repository: https://github.com/CORE-DEX/coredex-subgraph/ropsten
+repository: https://github.com/CORE-DEX/coredex-subgraph/goerli
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: ropsten
+    network: goerli
     source:
       address: '0x113d2b6be54a0d46d4cb287c82b50db2e914b203'
       abi: Factory
-      startBlock: 12420435
+      startBlock: 7111986
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -34,7 +34,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pair
-    network: ropsten
+    network: goerli
     source:
       abi: Pair
     mapping:
